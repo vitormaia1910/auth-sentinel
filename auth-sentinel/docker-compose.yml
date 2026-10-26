@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    container_name: sentinel-auth-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - JWT_ACCESS_SECRET=prod_secret_access_key
+      - JWT_REFRESH_SECRET=prod_secret_refresh_key
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
